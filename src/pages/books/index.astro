@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BookCard from '../../components/BookCard.astro';
+import { getCollection } from 'astro:content';
+
+const allBooks = await getCollection('books');
+const books = [...allBooks].sort((a, b) => new Date(b.data.dateAdded).getTime() - new Date(a.data.dateAdded).getTime());
+
+const genres = [...new Set(books.flatMap((b) => b.data.genres))].sort();
+---
+
+<BaseLayout
+  title="All Book Recommendations"
+  description="Browse our complete collection of curated book recommendations for Indian readers. Find your next great read across all genres."
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">All Books</h1>
+    <p class="text-gray-600 mb-8">Browse {books.length} curated book recommendations for Indian readers.</p>
+
+    <!-- Genre filter -->
+    <div class="flex flex-wrap gap-2 mb-8">
+      <span class="text-sm text-gray-500 py-1">Filter:</span>
+      {genres.map((genre) => (
+        <a href={`/category/${genre}/`} class="text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full hover:bg-primary-100 hover:text-primary-700 transition-colors">
+          {genre}
+        </a>
+      ))}
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      {books.map((book) => (
+        <BookCard
+          slug={book.id}
+          title={book.data.title}
+          author={book.data.author}
+          coverImage={book.data.coverImage}
+          rating={book.data.rating}
+          genres={book.data.genres}
+          amazonUrl={book.data.amazonUrl}
+        />
+      ))}
+    </div>
+  </div>
+</BaseLayout>

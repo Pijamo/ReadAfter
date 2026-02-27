@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BookCard from '../../components/BookCard.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const books = await getCollection('books');
+  const allGenres = [...new Set(books.flatMap((b) => b.data.genres))];
+
+  return allGenres.map((genre) => ({
+    params: { category: genre },
+    props: {
+      genre,
+      books: books.filter((b) => b.data.genres.includes(genre)),
+    },
+  }));
+}
+
+const { genre, books } = Astro.props;
+const sortedBooks = [...books].sort((a, b) => b.data.rating - a.data.rating);
+const displayName = genre.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+---
+
+<BaseLayout
+  title={`Best ${displayName} Books in India`}
+  description={`Discover the best ${displayName.toLowerCase()} books recommended for Indian readers. Curated reviews and the best prices on Amazon India and Flipkart.`}
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <nav class="text-sm text-gray-500 mb-6" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-primary-600">Home</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-700">{displayName}</span>
+    </nav>
+
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Best {displayName} Books</h1>
+    <p class="text-gray-600 mb-8">{sortedBooks.length} curated {displayName.toLowerCase()} book recommendations for Indian readers.</p>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      {sortedBooks.map((book) => (
+        <BookCard
+          slug={book.id}
+          title={book.data.title}
+          author={book.data.author}
+          coverImage={book.data.coverImage}
+          rating={book.data.rating}
+          genres={book.data.genres}
+          amazonUrl={book.data.amazonUrl}
+        />
+      ))}
+    </div>
+  </div>
+</BaseLayout>

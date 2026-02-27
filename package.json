@@ -1,0 +1,19 @@
+{
+  "name": "readafter",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "fetch-books": "node scripts/fetch-books.mjs",
+    "generate-posts": "node scripts/generate-blog-posts.mjs"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.15",
+    "@astrojs/sitemap": "^3.7.0",
+    "@astrojs/tailwind": "^6.0.2",
+    "astro": "^5.18.0",
+    "tailwindcss": "^3.4.19"
+  }
+}

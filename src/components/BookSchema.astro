@@ -1,0 +1,55 @@
+---
+interface Props {
+  title: string;
+  author: string;
+  isbn?: string;
+  pages?: number;
+  publisher?: string;
+  publishedDate?: string;
+  language: string;
+  coverImage: string;
+  rating: number;
+  ratingsCount?: number;
+  priceINR?: number;
+  amazonUrl: string;
+  url: string;
+}
+
+const props = Astro.props;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Book',
+  name: props.title,
+  author: {
+    '@type': 'Person',
+    name: props.author,
+  },
+  ...(props.isbn && { isbn: props.isbn }),
+  ...(props.pages && { numberOfPages: props.pages }),
+  ...(props.publisher && {
+    publisher: { '@type': 'Organization', name: props.publisher },
+  }),
+  ...(props.publishedDate && { datePublished: props.publishedDate }),
+  inLanguage: props.language,
+  image: props.coverImage,
+  url: props.url,
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: String(props.rating),
+    bestRating: '5',
+    ...(props.ratingsCount && { ratingCount: props.ratingsCount }),
+  },
+  ...(props.priceINR && {
+    offers: {
+      '@type': 'Offer',
+      price: String(props.priceINR),
+      priceCurrency: 'INR',
+      availability: 'https://schema.org/InStock',
+      url: props.amazonUrl,
+    },
+  }),
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

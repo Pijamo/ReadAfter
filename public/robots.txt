@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://readafter.in/sitemap-index.xml

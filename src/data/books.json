@@ -1,0 +1,412 @@
+[
+  {
+    "slug": "a-suitable-boy",
+    "title": " \"A Suitable Boy",
+    "author": " \"Vikram Seth",
+    "genres": [
+      "fiction"
+    ],
+    "rating": 4.2,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9780060786526&tag=readafter-21",
+    "tags": [
+      "indian-authors",
+      "classic"
+    ]
+  },
+  {
+    "slug": "atomic-habits",
+    "title": " \"Atomic Habits",
+    "author": " \"James Clear",
+    "genres": [
+      "self-help"
+    ],
+    "rating": 4.5,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9780735211292&tag=readafter-21",
+    "tags": [
+      "bestseller"
+    ]
+  },
+  {
+    "slug": "clean-code",
+    "title": " \"Clean Code",
+    "author": " \"Robert C. Martin",
+    "genres": [
+      "technology"
+    ],
+    "rating": 4.4,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9780132350884&tag=readafter-21",
+    "tags": [
+      "programming"
+    ]
+  },
+  {
+    "slug": "cracking-the-coding-interview",
+    "title": " \"Cracking the Coding Interview",
+    "author": " \"Gayle Laakmann McDowell",
+    "genres": [
+      "technology"
+    ],
+    "rating": 4.3,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9780984782857&tag=readafter-21",
+    "tags": [
+      "interview-prep"
+    ]
+  },
+  {
+    "slug": "deep-work",
+    "title": " \"Deep Work",
+    "author": " \"Cal Newport",
+    "genres": [
+      "self-help"
+    ],
+    "rating": 4.2,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9781455586691&tag=readafter-21",
+    "tags": [
+      "productivity",
+      "focus",
+      "career",
+      "time-management"
+    ]
+  },
+  {
+    "slug": "designing-data-intensive-applications",
+    "title": " \"Designing Data-Intensive Applications",
+    "author": " \"Martin Kleppmann",
+    "genres": [
+      "technology"
+    ],
+    "rating": 4.7,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9781449373320&tag=readafter-21",
+    "tags": [
+      "system-design"
+    ]
+  },
+  {
+    "slug": "how-to-prepare-for-cat",
+    "title": " \"How to Prepare for Quantitative Aptitude for the CAT",
+    "author": " \"Arun Sharma",
+    "genres": [
+      "exam-prep"
+    ],
+    "rating": 4.1,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9789352602247&tag=readafter-21",
+    "tags": [
+      "cat"
+    ]
+  },
+  {
+    "slug": "ikigai",
+    "title": " \"Ikigai",
+    "author": " \"Hector Garcia and Francesc Miralles",
+    "genres": [
+      "self-help"
+    ],
+    "rating": 4.1,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9780143130727&tag=readafter-21",
+    "tags": [
+      "bestseller"
+    ]
+  },
+  {
+    "slug": "indian-economy-by-ramesh-singh",
+    "title": " \"Indian Economy",
+    "author": " \"Ramesh Singh",
+    "genres": [
+      "exam-prep"
+    ],
+    "rating": 4.2,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9789352607457&tag=readafter-21",
+    "tags": [
+      "upsc"
+    ]
+  },
+  {
+    "slug": "indian-polity-by-laxmikanth",
+    "title": " \"Indian Polity",
+    "author": " \"M. Laxmikanth",
+    "genres": [
+      "exam-prep"
+    ],
+    "rating": 4.5,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9789352603633&tag=readafter-21",
+    "tags": [
+      "upsc"
+    ]
+  },
+  {
+    "slug": "jaya-an-illustrated-retelling-of-the-mahabharata",
+    "title": " \"Jaya: An Illustrated Retelling of the Mahabharata",
+    "author": " \"Devdutt Pattanaik",
+    "genres": [
+      "mythology"
+    ],
+    "rating": 4.4,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9780143104254&tag=readafter-21",
+    "tags": [
+      "indian-authors"
+    ]
+  },
+  {
+    "slug": "quantitative-aptitude-by-rs-aggarwal",
+    "title": " \"Quantitative Aptitude",
+    "author": " \"R.S. Aggarwal",
+    "genres": [
+      "exam-prep"
+    ],
+    "rating": 4.3,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9789352534029&tag=readafter-21",
+    "tags": [
+      "competitive-exams"
+    ]
+  },
+  {
+    "slug": "rich-dad-poor-dad",
+    "title": " \"Rich Dad Poor Dad",
+    "author": " \"Robert T. Kiyosaki",
+    "genres": [
+      "business"
+    ],
+    "rating": 4.2,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9781612680194&tag=readafter-21",
+    "tags": [
+      "finance"
+    ]
+  },
+  {
+    "slug": "sita-warrior-of-mithila",
+    "title": " \"Sita - Warrior of Mithila",
+    "author": " \"Amish Tripathi",
+    "genres": [
+      "mythology"
+    ],
+    "rating": 4.2,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9789386224583&tag=readafter-21",
+    "tags": [
+      "indian-authors"
+    ]
+  },
+  {
+    "slug": "start-with-why",
+    "title": " \"Start with Why",
+    "author": " \"Simon Sinek",
+    "genres": [
+      "business"
+    ],
+    "rating": 4.1,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9781591846444&tag=readafter-21",
+    "tags": [
+      "leadership"
+    ]
+  },
+  {
+    "slug": "system-design-interview",
+    "title": " \"System Design Interview",
+    "author": " \"Alex Xu",
+    "genres": [
+      "technology"
+    ],
+    "rating": 4.4,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9798664653403&tag=readafter-21",
+    "tags": [
+      "system-design"
+    ]
+  },
+  {
+    "slug": "the-difficulty-of-being-good",
+    "title": " \"The Difficulty of Being Good",
+    "author": " \"Gurcharan Das",
+    "genres": [
+      "mythology"
+    ],
+    "rating": 4,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9780143068860&tag=readafter-21",
+    "tags": [
+      "indian-authors"
+    ]
+  },
+  {
+    "slug": "the-god-of-small-things",
+    "title": " \"The God of Small Things",
+    "author": " \"Arundhati Roy",
+    "genres": [
+      "fiction"
+    ],
+    "rating": 4,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9780812979657&tag=readafter-21",
+    "tags": [
+      "booker-prize",
+      "indian-authors",
+      "literary-fiction",
+      "classic"
+    ]
+  },
+  {
+    "slug": "the-hard-thing-about-hard-things",
+    "title": " \"The Hard Thing About Hard Things",
+    "author": " \"Ben Horowitz",
+    "genres": [
+      "business"
+    ],
+    "rating": 4.2,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9780062273208&tag=readafter-21",
+    "tags": [
+      "startup"
+    ]
+  },
+  {
+    "slug": "the-immortals-of-meluha",
+    "title": " \"The Immortals of Meluha",
+    "author": " \"Amish Tripathi",
+    "genres": [
+      "fiction",
+      "mythology"
+    ],
+    "rating": 4.3,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9789380658742&tag=readafter-21",
+    "tags": [
+      "indian-authors",
+      "bestseller"
+    ]
+  },
+  {
+    "slug": "the-lean-startup",
+    "title": " \"The Lean Startup",
+    "author": " \"Eric Ries",
+    "genres": [
+      "business"
+    ],
+    "rating": 4.1,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9780307887894&tag=readafter-21",
+    "tags": [
+      "startup"
+    ]
+  },
+  {
+    "slug": "the-oath-of-the-vayuputras",
+    "title": " \"The Oath of the Vayuputras",
+    "author": " \"Amish Tripathi",
+    "genres": [
+      "mythology"
+    ],
+    "rating": 4.1,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9789380658988&tag=readafter-21",
+    "tags": [
+      "indian-authors"
+    ]
+  },
+  {
+    "slug": "the-palace-of-illusions",
+    "title": " \"The Palace of Illusions",
+    "author": " \"Chitra Banerjee Divakaruni",
+    "genres": [
+      "fiction",
+      "mythology"
+    ],
+    "rating": 4.1,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9780385515993&tag=readafter-21",
+    "tags": [
+      "indian-authors",
+      "mythology"
+    ]
+  },
+  {
+    "slug": "the-pragmatic-programmer",
+    "title": " \"The Pragmatic Programmer",
+    "author": " \"David Thomas and Andrew Hunt",
+    "genres": [
+      "technology"
+    ],
+    "rating": 4.5,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9780135957059&tag=readafter-21",
+    "tags": [
+      "programming"
+    ]
+  },
+  {
+    "slug": "the-psychology-of-money",
+    "title": " \"The Psychology of Money",
+    "author": " \"Morgan Housel",
+    "genres": [
+      "self-help"
+    ],
+    "rating": 4.4,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9780857197689&tag=readafter-21",
+    "tags": [
+      "bestseller",
+      "personal-finance",
+      "investing",
+      "behavioral-economics"
+    ]
+  },
+  {
+    "slug": "the-secret-of-the-nagas",
+    "title": " \"The Secret of the Nagas",
+    "author": " \"Amish Tripathi",
+    "genres": [
+      "mythology"
+    ],
+    "rating": 4.2,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9789380658797&tag=readafter-21",
+    "tags": [
+      "indian-authors"
+    ]
+  },
+  {
+    "slug": "the-white-tiger",
+    "title": " \"The White Tiger",
+    "author": " \"Aravind Adiga",
+    "genres": [
+      "fiction"
+    ],
+    "rating": 4.1,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9781416562603&tag=readafter-21",
+    "tags": [
+      "booker-prize",
+      "indian-authors",
+      "debut-novel",
+      "dark-humor"
+    ]
+  },
+  {
+    "slug": "thinking-fast-and-slow",
+    "title": " \"Thinking, Fast and Slow",
+    "author": " \"Daniel Kahneman",
+    "genres": [
+      "self-help"
+    ],
+    "rating": 4.2,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9780374533557&tag=readafter-21",
+    "tags": [
+      "psychology",
+      "behavioral-economics",
+      "nobel-laureate",
+      "decision-making"
+    ]
+  },
+  {
+    "slug": "word-power-made-easy",
+    "title": " \"Word Power Made Easy",
+    "author": " \"Norman Lewis",
+    "genres": [
+      "exam-prep"
+    ],
+    "rating": 4.4,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9781101873854&tag=readafter-21",
+    "tags": [
+      "vocabulary"
+    ]
+  },
+  {
+    "slug": "zero-to-one",
+    "title": " \"Zero to One",
+    "author": " \"Peter Thiel",
+    "genres": [
+      "business"
+    ],
+    "rating": 4.3,
+    "amazonUrl": " \"https://www.amazon.in/s?k=9780804139298&tag=readafter-21",
+    "tags": [
+      "startup"
+    ]
+  }
+]

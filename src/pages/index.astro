@@ -1,0 +1,137 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BookCard from '../components/BookCard.astro';
+import { getCollection } from 'astro:content';
+
+const allBooks = await getCollection('books');
+const featuredBooks = allBooks.filter((b) => b.data.featured).slice(0, 6);
+const recentBooks = [...allBooks].sort((a, b) => new Date(b.data.dateAdded).getTime() - new Date(a.data.dateAdded).getTime()).slice(0, 8);
+
+const allBlogPosts = await getCollection('blog');
+const recentPosts = [...allBlogPosts].sort((a, b) => new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime()).slice(0, 4);
+
+const categories = [
+  { name: 'Fiction', slug: 'fiction', emoji: '📖' },
+  { name: 'Self-Help', slug: 'self-help', emoji: '🧠' },
+  { name: 'Business', slug: 'business', emoji: '💼' },
+  { name: 'Technology', slug: 'technology', emoji: '💻' },
+  { name: 'Indian Authors', slug: 'indian-authors', emoji: '🇮🇳' },
+  { name: 'Mythology', slug: 'mythology', emoji: '🕉️' },
+  { name: 'Exam Prep', slug: 'exam-prep', emoji: '📝' },
+  { name: 'Non-Fiction', slug: 'non-fiction', emoji: '📚' },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'ReadAfter',
+  url: 'https://readafter.in',
+  description: 'Curated book recommendations for Indian readers with the best deals on Amazon India and Flipkart.',
+};
+---
+
+<BaseLayout
+  title="Best Book Recommendations for Indian Readers"
+  description="Discover your next great read. Curated book recommendations for Indian readers with the best deals on Amazon India and Flipkart."
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="bg-gradient-to-br from-primary-50 to-amber-50 py-16 sm:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight">
+        Discover Your Next <span class="text-primary-600">Great Read</span>
+      </h1>
+      <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+        Curated book recommendations for Indian readers. Find the best books across fiction, self-help, business, and more.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <a href="/books/" class="px-6 py-3 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors">
+          Browse All Books
+        </a>
+        <a href="/blog/" class="px-6 py-3 bg-white text-primary-700 font-semibold rounded-lg border border-primary-200 hover:bg-primary-50 transition-colors">
+          Reading Lists
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6">Browse by Category</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      {categories.map((cat) => (
+        <a href={`/category/${cat.slug}/`} class="flex items-center gap-3 p-4 bg-white rounded-lg border border-gray-100 hover:border-primary-300 hover:shadow-sm transition-all">
+          <span class="text-2xl">{cat.emoji}</span>
+          <span class="font-medium text-gray-800">{cat.name}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Featured Books -->
+  {featuredBooks.length > 0 && (
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">Featured Books</h2>
+        <a href="/books/" class="text-sm text-primary-600 hover:text-primary-700 font-medium">View all &rarr;</a>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        {featuredBooks.map((book) => (
+          <BookCard
+            slug={book.id}
+            title={book.data.title}
+            author={book.data.author}
+            coverImage={book.data.coverImage}
+            rating={book.data.rating}
+            genres={book.data.genres}
+            amazonUrl={book.data.amazonUrl}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Recent Books -->
+  {recentBooks.length > 0 && (
+    <section class="bg-gray-50 py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">Recently Added</h2>
+          <a href="/books/" class="text-sm text-primary-600 hover:text-primary-700 font-medium">View all &rarr;</a>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {recentBooks.map((book) => (
+            <BookCard
+              slug={book.id}
+              title={book.data.title}
+              author={book.data.author}
+              coverImage={book.data.coverImage}
+              rating={book.data.rating}
+              genres={book.data.genres}
+              amazonUrl={book.data.amazonUrl}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Recent Blog Posts -->
+  {recentPosts.length > 0 && (
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">From the Blog</h2>
+        <a href="/blog/" class="text-sm text-primary-600 hover:text-primary-700 font-medium">All posts &rarr;</a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {recentPosts.map((post) => (
+          <a href={`/blog/${post.id}/`} class="block p-6 bg-white rounded-lg border border-gray-100 hover:shadow-md transition-shadow">
+            <h3 class="font-semibold text-gray-900 text-lg">{post.data.title}</h3>
+            <p class="text-sm text-gray-500 mt-2 line-clamp-2">{post.data.description}</p>
+            <span class="text-xs text-gray-400 mt-3 block">{post.data.publishDate}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+</BaseLayout>

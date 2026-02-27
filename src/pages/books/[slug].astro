@@ -1,0 +1,170 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AffiliateButton from '../../components/AffiliateButton.astro';
+import AffiliateDisclosure from '../../components/AffiliateDisclosure.astro';
+import BookSchema from '../../components/BookSchema.astro';
+import BookCard from '../../components/BookCard.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const books = await getCollection('books');
+  return books.map((book) => ({
+    params: { slug: book.id },
+    props: { book },
+  }));
+}
+
+const { book } = Astro.props;
+const { Content } = await render(book);
+const data = book.data;
+
+const allBooks = await getCollection('books');
+const relatedBooks = allBooks
+  .filter((b) => b.id !== book.id && b.data.genres.some((g: string) => data.genres.includes(g)))
+  .slice(0, 4);
+
+const stars = '★'.repeat(Math.round(data.rating)) + '☆'.repeat(5 - Math.round(data.rating));
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://readafter.in/' },
+    { '@type': 'ListItem', position: 2, name: 'Books', item: 'https://readafter.in/books/' },
+    { '@type': 'ListItem', position: 3, name: data.title },
+  ],
+};
+---
+
+<BaseLayout
+  title={`${data.title} by ${data.author} - Review & Where to Buy`}
+  description={`Read our review of ${data.title} by ${data.author}. Find the best price on Amazon India and Flipkart.`}
+  ogImage={data.coverImage}
+  ogType="book"
+  jsonLd={breadcrumbLd}
+>
+  <BookSchema
+    title={data.title}
+    author={data.author}
+    isbn={data.isbn}
+    pages={data.pages}
+    publisher={data.publisher}
+    publishedDate={data.publishedDate}
+    language={data.language}
+    coverImage={data.coverImage}
+    rating={data.rating}
+    ratingsCount={data.ratingsCount}
+    priceINR={data.priceINR}
+    amazonUrl={data.amazonUrl}
+    url={Astro.url.href}
+  />
+
+  <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Breadcrumbs -->
+    <nav class="text-sm text-gray-500 mb-6" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-primary-600">Home</a>
+      <span class="mx-2">/</span>
+      <a href="/books/" class="hover:text-primary-600">Books</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-700">{data.title}</span>
+    </nav>
+
+    <AffiliateDisclosure />
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Cover Image -->
+      <div class="md:col-span-1">
+        <img
+          src={data.coverImage}
+          alt={`${data.title} by ${data.author} - Book Cover`}
+          class="w-full max-w-xs mx-auto rounded-lg shadow-lg"
+        />
+        <div class="mt-6">
+          <AffiliateButton amazonUrl={data.amazonUrl} flipkartUrl={data.flipkartUrl} bookTitle={data.title} />
+        </div>
+      </div>
+
+      <!-- Book Details -->
+      <div class="md:col-span-2">
+        <div class="flex flex-wrap gap-2 mb-3">
+          {data.genres.map((genre: string) => (
+            <a href={`/category/${genre}/`} class="text-xs bg-primary-50 text-primary-700 px-2 py-1 rounded-full hover:bg-primary-100 transition-colors">
+              {genre}
+            </a>
+          ))}
+        </div>
+
+        <h1 class="text-3xl font-bold text-gray-900">{data.title}</h1>
+        {data.subtitle && <p class="text-lg text-gray-600 mt-1">{data.subtitle}</p>}
+        <p class="text-lg text-gray-500 mt-2">by <strong class="text-gray-700">{data.author}</strong></p>
+
+        <div class="flex items-center gap-4 mt-4">
+          <span class="text-amber-500 text-lg" title={`${data.rating} out of 5`}>{stars}</span>
+          <span class="text-sm text-gray-500">{data.rating}/5</span>
+          {data.priceINR && <span class="text-lg font-semibold text-gray-900">₹{data.priceINR}</span>}
+        </div>
+
+        <!-- Details Table -->
+        <dl class="mt-6 grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+          {data.pages && (
+            <>
+              <dt class="text-gray-500">Pages</dt>
+              <dd class="text-gray-900">{data.pages}</dd>
+            </>
+          )}
+          {data.publisher && (
+            <>
+              <dt class="text-gray-500">Publisher</dt>
+              <dd class="text-gray-900">{data.publisher}</dd>
+            </>
+          )}
+          {data.publishedDate && (
+            <>
+              <dt class="text-gray-500">Published</dt>
+              <dd class="text-gray-900">{data.publishedDate}</dd>
+            </>
+          )}
+          <dt class="text-gray-500">Language</dt>
+          <dd class="text-gray-900">{data.language === 'en' ? 'English' : data.language}</dd>
+          {data.isbn && (
+            <>
+              <dt class="text-gray-500">ISBN</dt>
+              <dd class="text-gray-900">{data.isbn}</dd>
+            </>
+          )}
+        </dl>
+
+        <!-- Review Content -->
+        <div class="mt-8 prose prose-gray max-w-none">
+          <Content />
+        </div>
+
+        <!-- Bottom CTA -->
+        <div class="mt-8 p-6 bg-amber-50 rounded-lg">
+          <p class="text-sm text-gray-700 mb-4">Ready to read <strong>{data.title}</strong>? Get the best price online:</p>
+          <AffiliateButton amazonUrl={data.amazonUrl} flipkartUrl={data.flipkartUrl} bookTitle={data.title} />
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Books -->
+    {relatedBooks.length > 0 && (
+      <section class="mt-16">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">You Might Also Like</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {relatedBooks.map((b) => (
+            <BookCard
+              slug={b.id}
+              title={b.data.title}
+              author={b.data.author}
+              coverImage={b.data.coverImage}
+              rating={b.data.rating}
+              genres={b.data.genres}
+              amazonUrl={b.data.amazonUrl}
+            />
+          ))}
+        </div>
+      </section>
+    )}
+  </article>
+</BaseLayout>

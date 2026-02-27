@@ -1,0 +1,33 @@
+---
+interface Props {
+  amazonUrl: string;
+  flipkartUrl?: string;
+  bookTitle: string;
+}
+
+const { amazonUrl, flipkartUrl, bookTitle } = Astro.props;
+---
+
+<div class="flex flex-col sm:flex-row gap-3">
+  <a
+    href={amazonUrl}
+    target="_blank"
+    rel="nofollow noopener sponsored"
+    class="inline-flex items-center justify-center px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-lg transition-colors text-sm"
+    aria-label={`Buy ${bookTitle} on Amazon India`}
+  >
+    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M.045 18.02c.07-.116.36-.198.855-.27a14.99 14.99 0 003.315-1.16c.27-.142.462-.108.576.097.03.055.063.13.093.207.26.622.65 1.196 1.163 1.71.473.477 1.013.85 1.614 1.118.616.278 1.26.42 1.93.42.67 0 1.315-.142 1.93-.42.602-.268 1.142-.64 1.614-1.118.514-.514.903-1.088 1.163-1.71a4.505 4.505 0 00.387-1.818 4.573 4.573 0 00-.387-1.855c-.26-.622-.65-1.178-1.163-1.672-.472-.477-1.012-.85-1.613-1.118a4.927 4.927 0 00-1.93-.42c-.672 0-1.316.142-1.932.42-.6.268-1.14.64-1.613 1.118-.514.494-.903 1.05-1.163 1.672A4.573 4.573 0 003.42 15.2c0 .644.13 1.253.387 1.818z"/></svg>
+    Buy on Amazon
+  </a>
+  {flipkartUrl && (
+    <a
+      href={flipkartUrl}
+      target="_blank"
+      rel="nofollow noopener sponsored"
+      class="inline-flex items-center justify-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors text-sm"
+      aria-label={`Buy ${bookTitle} on Flipkart`}
+    >
+      Buy on Flipkart
+    </a>
+  )}
+</div>

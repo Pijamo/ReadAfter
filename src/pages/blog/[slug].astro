@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AffiliateDisclosure from '../../components/AffiliateDisclosure.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const data = post.data;
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.description}
+  ogImage={data.coverImage}
+  ogType="article"
+>
+  <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <nav class="text-sm text-gray-500 mb-6" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-primary-600">Home</a>
+      <span class="mx-2">/</span>
+      <a href="/blog/" class="hover:text-primary-600">Blog</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-700">{data.title}</span>
+    </nav>
+
+    <header class="mb-8">
+      <div class="flex flex-wrap gap-2 mb-3">
+        {data.tags.map((tag: string) => (
+          <span class="text-xs bg-primary-50 text-primary-700 px-2 py-1 rounded-full">{tag}</span>
+        ))}
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">{data.title}</h1>
+      <p class="text-gray-500 mt-3">{data.description}</p>
+      <time class="text-sm text-gray-400 mt-2 block">{data.publishDate}</time>
+    </header>
+
+    <AffiliateDisclosure />
+
+    <div class="prose prose-gray prose-lg max-w-none">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
