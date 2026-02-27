@@ -1,0 +1,56 @@
+name: Generate Content
+
+on:
+  schedule:
+    - cron: '0 6 * * 1' # Every Monday at 6:00 UTC (11:30 AM IST)
+  workflow_dispatch:
+    inputs:
+      category:
+        description: 'Target category (or "auto" for random)'
+        required: false
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - entrepreneurship
+          - productivity
+          - personal-finance
+          - leadership
+          - self-help
+          - career-growth
+      count:
+        description: 'Number of articles to generate'
+        required: false
+        default: '2'
+        type: string
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install agent dependencies
+        working-directory: ./agents
+        run: npm ci
+
+      - name: Run content pipeline
+        working-directory: ./agents
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: npx tsx src/index.ts --category=${{ inputs.category || 'auto' }} --count=${{ inputs.count || '2' }}
+
+      - name: Validate generated content
+        run: npx tsx scripts/validate-content.ts
+
+      - name: Commit and push new articles
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'content: add new articles via AI pipeline'
+          file_pattern: 'content/articles/*.mdx'
