@@ -43,3 +43,7 @@ next-env.d.ts
 # agent pipeline intermediate outputs
 agents/output/
 agents/node_modules/
+
+# TinaCMS generated files
+tina/__generated__
+.tina
