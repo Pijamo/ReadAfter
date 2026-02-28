@@ -108,10 +108,13 @@ async function searchForIsbn(
       // Has a cover on Open Library?
       if (!doc.cover_i) continue;
 
-      // Try ISBNs from this doc — prefer ISBN-13
+      // Try ISBNs from this doc — prefer ISBN-13, only valid lengths
       if (doc.isbn && doc.isbn.length > 0) {
+        const validIsbns = doc.isbn.filter(
+          (i) => i.length === 10 || i.length === 13
+        );
         // Sort: ISBN-13 first, then ISBN-10
-        const sorted = [...doc.isbn].sort((a, b) => b.length - a.length);
+        const sorted = validIsbns.sort((a, b) => b.length - a.length);
 
         for (const isbn of sorted.slice(0, 5)) {
           const hasCover = await checkCoverExists(isbn);
