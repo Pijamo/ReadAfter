@@ -44,6 +44,9 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Install root dependencies
+        run: npm ci
+
       - name: Install agent dependencies
         working-directory: ./agents
         run: npm ci
