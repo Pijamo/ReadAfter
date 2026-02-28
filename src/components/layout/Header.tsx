@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { categories } from "@/lib/categories";
 import { SITE_NAME } from "@/lib/constants";
 
 export default function Header() {
@@ -18,31 +17,24 @@ export default function Header() {
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-6">
-            {categories.slice(0, 4).map((cat) => (
-              <Link
-                key={cat.slug}
-                href={`/${cat.slug}`}
-                className="text-sm text-muted hover:text-foreground transition-colors"
-              >
-                {cat.name}
-              </Link>
-            ))}
-            <div className="relative group">
-              <button className="text-sm text-muted hover:text-foreground transition-colors">
-                More
-              </button>
-              <div className="absolute right-0 top-full mt-2 w-48 rounded-lg border border-border bg-card shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                {categories.slice(4).map((cat) => (
-                  <Link
-                    key={cat.slug}
-                    href={`/${cat.slug}`}
-                    className="block px-4 py-2 text-sm text-muted hover:text-foreground hover:bg-background transition-colors first:rounded-t-lg last:rounded-b-lg"
-                  >
-                    {cat.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
+            <Link
+              href="/books"
+              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+            >
+              Books
+            </Link>
+            <Link
+              href="/blog"
+              className="text-sm text-muted hover:text-foreground transition-colors"
+            >
+              Blog
+            </Link>
+            <Link
+              href="/about"
+              className="text-sm text-muted hover:text-foreground transition-colors"
+            >
+              About
+            </Link>
           </nav>
 
           {/* Mobile menu button */}
@@ -78,17 +70,28 @@ export default function Header() {
 
         {/* Mobile nav */}
         {menuOpen && (
-          <nav className="md:hidden pb-4 border-t border-border pt-4">
-            {categories.map((cat) => (
-              <Link
-                key={cat.slug}
-                href={`/${cat.slug}`}
-                className="block py-2 text-sm text-muted hover:text-foreground transition-colors"
-                onClick={() => setMenuOpen(false)}
-              >
-                {cat.name}
-              </Link>
-            ))}
+          <nav className="md:hidden pb-4 border-t border-border pt-4 space-y-2">
+            <Link
+              href="/books"
+              className="block py-2 text-sm font-medium text-foreground hover:text-primary transition-colors"
+              onClick={() => setMenuOpen(false)}
+            >
+              Books
+            </Link>
+            <Link
+              href="/blog"
+              className="block py-2 text-sm text-muted hover:text-foreground transition-colors"
+              onClick={() => setMenuOpen(false)}
+            >
+              Blog
+            </Link>
+            <Link
+              href="/about"
+              className="block py-2 text-sm text-muted hover:text-foreground transition-colors"
+              onClick={() => setMenuOpen(false)}
+            >
+              About
+            </Link>
           </nav>
         )}
       </div>

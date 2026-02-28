@@ -1,3 +1,5 @@
+// --- Existing types (backward compat for articles) ---
+
 export interface Book {
   title: string;
   author: string;
@@ -32,6 +34,33 @@ export interface ArticleMeta {
   slug: string;
   frontmatter: ArticleFrontmatter;
 }
+
+// --- New: Book as first-class content ---
+
+export interface BookFrontmatter {
+  title: string;
+  author: string;
+  isbn: string;
+  category: Category;
+  rating: number;
+  summary: string;
+  amazonUrl: string;
+  flipkartUrl: string;
+  amazonPrice: number | null;
+  flipkartPrice: number | null;
+  tags: string[];
+  date: string;
+  featured: boolean;
+  relatedBooks: string[];
+  seo: SEOMeta;
+}
+
+export interface BookMeta {
+  slug: string;
+  frontmatter: BookFrontmatter;
+}
+
+// --- Shared ---
 
 export type Category =
   | "entrepreneurship"

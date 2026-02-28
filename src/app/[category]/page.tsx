@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { categories, getCategoryBySlug } from "@/lib/categories";
-import { getArticlesByCategory } from "@/lib/content";
+import { getBooksByCategory } from "@/lib/books";
 import { SITE_NAME } from "@/lib/constants";
-import ArticleCard from "@/components/articles/ArticleCard";
+import BookReviewCard from "@/components/books/BookReviewCard";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
 interface Props {
@@ -33,11 +33,16 @@ export default async function CategoryPage({ params }: Props) {
     notFound();
   }
 
-  const articles = getArticlesByCategory(cat.slug);
+  const books = getBooksByCategory(cat.slug);
 
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 py-10">
-      <Breadcrumbs items={[{ label: cat.name }]} />
+      <Breadcrumbs
+        items={[
+          { label: "Books", href: "/books" },
+          { label: cat.name },
+        ]}
+      />
 
       <div className="mt-6">
         <h1 className="text-3xl sm:text-4xl font-bold text-foreground">
@@ -46,10 +51,10 @@ export default async function CategoryPage({ params }: Props) {
         <p className="mt-3 text-lg text-muted max-w-2xl">{cat.description}</p>
       </div>
 
-      {articles.length > 0 ? (
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {articles.map((article) => (
-            <ArticleCard key={article.slug} article={article} />
+      {books.length > 0 ? (
+        <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          {books.map((book) => (
+            <BookReviewCard key={book.slug} book={book} />
           ))}
         </div>
       ) : (

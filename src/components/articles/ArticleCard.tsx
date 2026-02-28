@@ -8,7 +8,7 @@ export default function ArticleCard({ article }: { article: ArticleMeta }) {
 
   return (
     <article className="border border-border rounded-xl bg-card p-6 hover:shadow-md transition-shadow">
-      <Link href={`/${frontmatter.category}/${slug}`} className="block">
+      <Link href={`/blog/${slug}`} className="block">
         <div className="flex items-center gap-3 mb-3">
           <CategoryBadge slug={frontmatter.category} />
           <span className="text-xs text-muted">

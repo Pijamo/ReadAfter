@@ -7,7 +7,7 @@ export default function CategoryBadge({ slug }: { slug: string }) {
 
   return (
     <Link
-      href={`/${slug}`}
+      href={`/books?category=${slug}`}
       className="inline-block text-xs font-medium uppercase tracking-wider text-primary bg-orange-50 px-2.5 py-1 rounded-full hover:bg-orange-100 transition-colors"
     >
       {category.name}

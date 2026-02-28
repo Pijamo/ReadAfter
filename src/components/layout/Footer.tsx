@@ -25,7 +25,7 @@ export default function Footer() {
               {categories.map((cat) => (
                 <li key={cat.slug}>
                   <Link
-                    href={`/${cat.slug}`}
+                    href={`/books?category=${cat.slug}`}
                     className="text-sm text-muted hover:text-foreground transition-colors"
                   >
                     {cat.name}
@@ -38,9 +38,25 @@ export default function Footer() {
           {/* Links */}
           <div>
             <h4 className="text-sm font-semibold text-foreground uppercase tracking-wider">
-              About
+              Links
             </h4>
             <ul className="mt-3 space-y-2">
+              <li>
+                <Link
+                  href="/books"
+                  className="text-sm text-muted hover:text-foreground transition-colors"
+                >
+                  Browse Books
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/blog"
+                  className="text-sm text-muted hover:text-foreground transition-colors"
+                >
+                  Blog
+                </Link>
+              </li>
               <li>
                 <Link
                   href="/about"

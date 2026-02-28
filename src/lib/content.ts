@@ -81,3 +81,11 @@ export function getArticleBody(slug: string): string | null {
 export function getAllSlugs(): string[] {
   return getAllArticles().map((a) => a.slug);
 }
+
+// Blog aliases (articles are now blog posts)
+export const getAllBlogPosts = getAllArticles;
+export const getBlogPostsByCategory = getArticlesByCategory;
+export const getFeaturedBlogPosts = getFeaturedArticles;
+export const getBlogPostRawContent = getArticleRawContent;
+export const getBlogPostFrontmatter = getArticleFrontmatter;
+export const getBlogPostBody = getArticleBody;
