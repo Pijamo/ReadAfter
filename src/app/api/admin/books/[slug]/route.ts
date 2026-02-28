@@ -84,8 +84,21 @@ export async function PUT(
   }
 
   // Write back
-  const newRaw = matter.stringify(content, data);
-  fs.writeFileSync(filePath, newRaw);
+  try {
+    const newRaw = matter.stringify(content, data);
+    fs.writeFileSync(filePath, newRaw);
+  } catch (err) {
+    const message =
+      err instanceof Error ? err.message : "Unknown write error";
+    console.error(`[Admin] Failed to save ${slug}:`, message);
+    return Response.json(
+      {
+        error: "Failed to write file. If deployed on Vercel, file edits only work locally in dev mode.",
+        detail: message,
+      },
+      { status: 500 }
+    );
+  }
 
   return Response.json({
     success: true,

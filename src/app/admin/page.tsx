@@ -134,7 +134,12 @@ export default function AdminPage() {
       setEditingSlug(null);
       await fetchBooks();
     } else {
-      setSaveMessage("Save failed.");
+      try {
+        const err = await res.json();
+        setSaveMessage(err.error || `Save failed (${res.status}).`);
+      } catch {
+        setSaveMessage(`Save failed (${res.status}).`);
+      }
     }
   };
 
