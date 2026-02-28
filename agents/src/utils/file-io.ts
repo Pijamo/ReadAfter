@@ -3,6 +3,7 @@ import path from "path";
 
 const ROOT_DIR = path.resolve(import.meta.dirname, "..", "..");
 const CONTENT_DIR = path.join(ROOT_DIR, "..", "content", "articles");
+const BOOKS_CONTENT_DIR = path.join(ROOT_DIR, "..", "content", "books");
 const OUTPUT_DIR = path.join(ROOT_DIR, "output");
 
 export function saveIntermediate(
@@ -28,6 +29,25 @@ export function getExistingSlugs(): string[] {
   if (!fs.existsSync(CONTENT_DIR)) return [];
   return fs
     .readdirSync(CONTENT_DIR)
+    .filter((f) => f.endsWith(".mdx"))
+    .map((f) => f.replace(/\.mdx$/, ""));
+}
+
+// =============================================
+// Book Review File Operations
+// =============================================
+
+export function writeBookMdxFile(slug: string, mdxContent: string): void {
+  fs.mkdirSync(BOOKS_CONTENT_DIR, { recursive: true });
+  const filePath = path.join(BOOKS_CONTENT_DIR, `${slug}.mdx`);
+  fs.writeFileSync(filePath, mdxContent);
+  console.log(`  [write] content/books/${slug}.mdx`);
+}
+
+export function getExistingBookSlugs(): string[] {
+  if (!fs.existsSync(BOOKS_CONTENT_DIR)) return [];
+  return fs
+    .readdirSync(BOOKS_CONTENT_DIR)
     .filter((f) => f.endsWith(".mdx"))
     .map((f) => f.replace(/\.mdx$/, ""));
 }

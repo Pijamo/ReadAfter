@@ -5,6 +5,14 @@ on:
     - cron: '0 6 * * 1' # Every Monday at 6:00 UTC (11:30 AM IST)
   workflow_dispatch:
     inputs:
+      type:
+        description: 'Content type to generate'
+        required: false
+        default: 'book'
+        type: choice
+        options:
+          - book
+          - article
       category:
         description: 'Target category (or "auto" for random)'
         required: false
@@ -19,7 +27,7 @@ on:
           - self-help
           - career-growth
       count:
-        description: 'Number of articles to generate'
+        description: 'Number of items to generate'
         required: false
         default: '2'
         type: string
@@ -44,13 +52,13 @@ jobs:
         working-directory: ./agents
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: npx tsx src/index.ts --category=${{ inputs.category || 'auto' }} --count=${{ inputs.count || '2' }}
+        run: npx tsx src/index.ts --type=${{ inputs.type || 'book' }} --category=${{ inputs.category || 'auto' }} --count=${{ inputs.count || '2' }}
 
       - name: Validate generated content
         run: npx tsx scripts/validate-content.ts
 
-      - name: Commit and push new articles
+      - name: Commit and push new content
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: 'content: add new articles via AI pipeline'
-          file_pattern: 'content/articles/*.mdx'
+          commit_message: 'content: add new ${{ inputs.type || "book" }} review(s) via AI pipeline'
+          file_pattern: 'content/articles/*.mdx content/books/*.mdx'

@@ -101,3 +101,72 @@ export interface PipelineResult {
   linkWarnings: string[];
   internalLinkSuggestions: number;
 }
+
+// =============================================
+// Book Review Pipeline Types
+// =============================================
+
+export interface BookReviewBrief {
+  title: string;
+  author: string;
+  isbn: string;
+  slug: string;
+  category: string;
+  focusKeyword: string;
+  secondaryKeywords: string[];
+  targetWordCount: number;
+  angle: string;
+  searchIntent: string;
+}
+
+export interface BookReviewFrontmatter {
+  title: string;
+  author: string;
+  isbn: string;
+  category: string;
+  rating: number;
+  summary: string;
+  amazonUrl: string;
+  flipkartUrl: string;
+  amazonPrice: number | null;
+  flipkartPrice: number | null;
+  tags: string[];
+  date: string;
+  featured: boolean;
+  relatedBooks: string[];
+  seo: {
+    focusKeyword: string;
+    metaTitle: string;
+    metaDescription: string;
+  };
+}
+
+export interface BookReviewDraft {
+  slug: string;
+  frontmatter: BookReviewFrontmatter;
+  bodyMarkdown: string;
+  fullMdx: string;
+}
+
+export interface BookEditResult {
+  review: BookReviewDraft;
+  changesMade: string[];
+}
+
+export interface BookPipelineConfig {
+  category: string;
+  count: number;
+  existingSlugs: string[];
+  dryRun: boolean;
+}
+
+export interface BookPipelineResult {
+  review: BookReviewDraft;
+  marketing: MarketingAssets;
+  managerScore: number;
+  revisionCycles: number;
+  costUsd: number;
+  qaIssues: QAIssue[];
+  linkWarnings: string[];
+  internalLinkSuggestions: number;
+}

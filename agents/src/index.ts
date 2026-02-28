@@ -7,8 +7,9 @@ config({ path: path.resolve(__dirname, "..", ".env"), override: true });
 
 import minimist from "minimist";
 import { runPipeline } from "./pipeline.js";
+import { runBookPipeline } from "./book-pipeline.js";
 import { runFreshnessCheck } from "./freshness-check.js";
-import { getExistingSlugs } from "./utils/file-io.js";
+import { getExistingSlugs, getExistingBookSlugs } from "./utils/file-io.js";
 
 const VALID_CATEGORIES = [
   "entrepreneurship",
@@ -27,17 +28,20 @@ Usage:
   npx tsx src/index.ts [options]
 
 Commands:
-  generate (default)    Generate new articles
+  generate (default)    Generate new content
   freshness             Check existing articles for staleness
 
 Options:
+  --type=<type>         Content type: "article" (default) or "book"
   --category=<cat>      Category to target (or "auto" for random)
-  --count=<n>           Number of articles to generate (1-5, default: 2)
+  --count=<n>           Number of items to generate (1-5, default: 2)
   --dry-run             Skip writing MDX files
   --help                Show this help message
 
 Examples:
   npx tsx src/index.ts --category=productivity --count=1
+  npx tsx src/index.ts --type=book --category=personal-finance --count=3
+  npx tsx src/index.ts --type=book --category=auto --dry-run
   npx tsx src/index.ts --category=auto --dry-run
   npx tsx src/index.ts freshness
 `);
@@ -67,9 +71,17 @@ async function main() {
   }
 
   // Default: generate
+  const contentType = args.type || "article";
   const category = args.category || "auto";
   const count = parseInt(args.count || "2", 10);
   const dryRun = args["dry-run"] || false;
+
+  if (!["article", "book"].includes(contentType)) {
+    console.error(
+      `Invalid type: "${contentType}". Valid types: article, book`
+    );
+    process.exit(1);
+  }
 
   const selectedCategory =
     category === "auto"
@@ -88,35 +100,65 @@ async function main() {
     process.exit(1);
   }
 
-  const existingSlugs = getExistingSlugs();
-  console.log(`Found ${existingSlugs.length} existing article(s)`);
-
   try {
-    const results = await runPipeline({
-      category: selectedCategory,
-      count,
-      existingSlugs,
-      dryRun,
-    });
+    if (contentType === "book") {
+      // Book review pipeline
+      const existingSlugs = getExistingBookSlugs();
+      console.log(`Found ${existingSlugs.length} existing book review(s)`);
 
-    console.log(`\nPipeline complete!`);
-    console.log(`Generated ${results.length} article(s):`);
-    for (const r of results) {
-      console.log(
-        `  - ${r.article.frontmatter.title} (score: ${r.managerScore}/10, revisions: ${r.revisionCycles})`
-      );
-      if (r.qaIssues.length > 0) {
+      const results = await runBookPipeline({
+        category: selectedCategory,
+        count,
+        existingSlugs,
+        dryRun,
+      });
+
+      console.log(`\nPipeline complete!`);
+      console.log(`Generated ${results.length} book review(s):`);
+      for (const r of results) {
         console.log(
-          `    QA: ${r.qaIssues.filter((i) => i.severity === "error").length} errors, ${r.qaIssues.filter((i) => i.severity === "warning").length} warnings`
+          `  - "${r.review.frontmatter.title}" by ${r.review.frontmatter.author} (score: ${r.managerScore}/10, rating: ${r.review.frontmatter.rating}/5)`
         );
+        if (r.qaIssues.length > 0) {
+          console.log(
+            `    QA: ${r.qaIssues.filter((i) => i.severity === "error").length} errors, ${r.qaIssues.filter((i) => i.severity === "warning").length} warnings`
+          );
+        }
+        if (r.linkWarnings.length > 0) {
+          console.log(`    Link issues: ${r.linkWarnings.join("; ")}`);
+        }
       }
-      if (r.linkWarnings.length > 0) {
-        console.log(`    Link issues: ${r.linkWarnings.join("; ")}`);
-      }
-      if (r.internalLinkSuggestions > 0) {
+    } else {
+      // Article pipeline (existing)
+      const existingSlugs = getExistingSlugs();
+      console.log(`Found ${existingSlugs.length} existing article(s)`);
+
+      const results = await runPipeline({
+        category: selectedCategory,
+        count,
+        existingSlugs,
+        dryRun,
+      });
+
+      console.log(`\nPipeline complete!`);
+      console.log(`Generated ${results.length} article(s):`);
+      for (const r of results) {
         console.log(
-          `    Internal linking: ${r.internalLinkSuggestions} link suggestion(s)`
+          `  - ${r.article.frontmatter.title} (score: ${r.managerScore}/10, revisions: ${r.revisionCycles})`
         );
+        if (r.qaIssues.length > 0) {
+          console.log(
+            `    QA: ${r.qaIssues.filter((i) => i.severity === "error").length} errors, ${r.qaIssues.filter((i) => i.severity === "warning").length} warnings`
+          );
+        }
+        if (r.linkWarnings.length > 0) {
+          console.log(`    Link issues: ${r.linkWarnings.join("; ")}`);
+        }
+        if (r.internalLinkSuggestions > 0) {
+          console.log(
+            `    Internal linking: ${r.internalLinkSuggestions} link suggestion(s)`
+          );
+        }
       }
     }
   } catch (error) {
