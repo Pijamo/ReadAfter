@@ -12,6 +12,7 @@ import {
   writeBookMdxFile,
   getExistingBookSlugs,
 } from "./utils/file-io.js";
+import { verifyBookIsbns } from "./utils/isbn-verify.js";
 import {
   BookPipelineConfig,
   BookPipelineResult,
@@ -82,10 +83,51 @@ export async function runBookPipeline(
     config.existingSlugs
   );
 
+  // Step 1.5: Verify ISBNs against Open Library API
+  // LLMs hallucinate ISBNs frequently, so we verify each one
+  const isbnResults = await verifyBookIsbns(
+    bookBriefs.map((b) => ({
+      slug: b.slug,
+      title: b.title,
+      author: b.author,
+      isbn: b.isbn,
+    }))
+  );
+
+  // Update briefs with verified ISBNs, skip books with no valid ISBN
+  const verifiedBriefs = bookBriefs
+    .map((brief) => {
+      const verification = isbnResults.get(brief.slug);
+      if (!verification || !verification.verifiedIsbn) {
+        console.log(
+          `[Pipeline] Skipping "${brief.title}" — no valid ISBN found`
+        );
+        return null;
+      }
+      if (verification.method === "search-corrected") {
+        console.log(
+          `[Pipeline] Corrected ISBN for "${brief.title}": ${brief.isbn} → ${verification.verifiedIsbn}`
+        );
+      }
+      return { ...brief, isbn: verification.verifiedIsbn };
+    })
+    .filter((b): b is NonNullable<typeof b> => b !== null);
+
+  if (verifiedBriefs.length === 0) {
+    console.log(
+      `\n[Pipeline] No books with valid ISBNs. Nothing to generate.`
+    );
+    return results;
+  }
+
+  console.log(
+    `\n[Pipeline] Proceeding with ${verifiedBriefs.length} book(s) (${bookBriefs.length - verifiedBriefs.length} skipped due to ISBN issues)\n`
+  );
+
   // Load existing content for internal linking
   const existingContent = loadExistingContentMeta();
 
-  for (const brief of bookBriefs) {
+  for (const brief of verifiedBriefs) {
     saveIntermediate("book-seo", brief.slug, brief);
 
     console.log(
