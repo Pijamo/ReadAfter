@@ -77,15 +77,8 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Affiliate disclosure */}
         <div className="mt-10 pt-6 border-t border-border">
-          <p className="text-xs text-muted leading-relaxed">
-            As an Amazon Associate, {SITE_NAME} earns from qualifying purchases.{" "}
-            {SITE_NAME} is also a participant in the Flipkart Affiliate Program.
-            When you buy through links on our site, we may earn an affiliate
-            commission at no extra cost to you.
-          </p>
-          <p className="mt-3 text-xs text-muted">
+          <p className="text-xs text-muted">
             &copy; {new Date().getFullYear()} {SITE_NAME}. All rights reserved.
           </p>
         </div>
