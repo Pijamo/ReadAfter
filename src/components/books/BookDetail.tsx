@@ -40,6 +40,7 @@ export default function BookDetail({
             isbn={frontmatter.isbn}
             title={frontmatter.title}
             author={frontmatter.author}
+            coverImage={frontmatter.coverImage}
             size="lg"
           />
         </div>

@@ -19,6 +19,7 @@ export default function BookReviewCard({ book }: { book: BookMeta }) {
             isbn={frontmatter.isbn}
             title={frontmatter.title}
             author={frontmatter.author}
+            coverImage={frontmatter.coverImage}
             size="sm"
           />
         </div>

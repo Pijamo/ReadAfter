@@ -7,6 +7,7 @@ interface BookCoverProps {
   isbn: string;
   title: string;
   author?: string;
+  coverImage?: string;
   size?: "sm" | "md" | "lg";
   className?: string;
 }
@@ -51,14 +52,19 @@ export default function BookCover({
   isbn,
   title,
   author,
+  coverImage,
   size = "md",
   className = "",
 }: BookCoverProps) {
   const { width, height } = sizeMap[size];
   const [hasError, setHasError] = useState(false);
-  const coverUrl = isbn
-    ? `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`
-    : "";
+
+  // Priority: custom coverImage > Open Library via ISBN > placeholder
+  const imageUrl = coverImage
+    ? coverImage
+    : isbn
+      ? `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`
+      : "";
 
   // Detect Open Library's tiny 1x1 placeholder (returned instead of 404)
   const handleLoad = useCallback(
@@ -72,7 +78,7 @@ export default function BookCover({
     []
   );
 
-  if (!coverUrl || hasError) {
+  if (!imageUrl || hasError) {
     return (
       <Placeholder
         title={title}
@@ -90,7 +96,7 @@ export default function BookCover({
       style={{ width, height }}
     >
       <Image
-        src={coverUrl}
+        src={imageUrl}
         alt={`Cover of ${title}`}
         width={width}
         height={height}

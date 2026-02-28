@@ -1,16 +1,18 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 
 interface BookSummary {
   slug: string;
   title: string;
   author: string;
   isbn: string;
+  asin: string;
   category: string;
   rating: number;
   amazonUrl: string;
   amazonPrice: number | null;
+  coverImage: string;
   date: string;
   featured: boolean;
 }
@@ -33,6 +35,8 @@ interface LinkCheckResult {
   internalLinks: { slug: string; exists: boolean }[];
 }
 
+type HealthFilter = "all" | "broken-links" | "broken-covers" | "healthy";
+
 export default function AdminPage() {
   const [token, setToken] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
@@ -43,6 +47,11 @@ export default function AdminPage() {
   const [editingSlug, setEditingSlug] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Record<string, unknown>>({});
   const [saveMessage, setSaveMessage] = useState("");
+
+  // Filters
+  const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [healthFilter, setHealthFilter] = useState<HealthFilter>("all");
 
   const headers = useCallback(
     () => ({ "x-admin-token": token, "Content-Type": "application/json" }),
@@ -79,6 +88,7 @@ export default function AdminPage() {
   }, [headers]);
 
   const handleLogin = async () => {
+    localStorage.setItem("admin-token", token);
     await fetchBooks();
     await fetchLinkReport();
   };
@@ -128,19 +138,59 @@ export default function AdminPage() {
     }
   };
 
-  const getLinkStatus = (slug: string) => {
-    if (!linkReport) return null;
-    return linkReport.results.find((r) => r.slug === slug);
-  };
+  const getLinkStatus = useCallback(
+    (slug: string) => {
+      if (!linkReport) return null;
+      return linkReport.results.find((r) => r.slug === slug) || null;
+    },
+    [linkReport]
+  );
+
+  // Derived: unique categories
+  const categories = useMemo(
+    () => [...new Set(books.map((b) => b.category))].sort(),
+    [books]
+  );
+
+  // Filtered books
+  const filteredBooks = useMemo(() => {
+    return books.filter((book) => {
+      // Text search
+      if (search) {
+        const q = search.toLowerCase();
+        const matchesText =
+          book.title.toLowerCase().includes(q) ||
+          book.author.toLowerCase().includes(q) ||
+          book.isbn.toLowerCase().includes(q) ||
+          book.asin.toLowerCase().includes(q) ||
+          book.slug.toLowerCase().includes(q);
+        if (!matchesText) return false;
+      }
+      // Category filter
+      if (categoryFilter !== "all" && book.category !== categoryFilter) {
+        return false;
+      }
+      // Health filter
+      if (healthFilter !== "all" && linkReport) {
+        const status = getLinkStatus(book.slug);
+        if (!status) return false;
+        if (healthFilter === "broken-links" && status.amazonUrl.ok) return false;
+        if (healthFilter === "broken-covers" && status.coverImage.ok) return false;
+        if (healthFilter === "healthy" && (!status.amazonUrl.ok || !status.coverImage.ok))
+          return false;
+      }
+      return true;
+    });
+  }, [books, search, categoryFilter, healthFilter, linkReport, getLinkStatus]);
 
   useEffect(() => {
-    // Check localStorage for saved token
     const saved = localStorage.getItem("admin-token");
     if (saved) {
       setToken(saved);
     }
   }, []);
 
+  // ---- Login screen ----
   if (!authenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-stone-50">
@@ -167,17 +217,18 @@ export default function AdminPage() {
     );
   }
 
+  // ---- Main dashboard ----
   return (
     <div className="min-h-screen bg-stone-50">
-      <div className="mx-auto max-w-6xl px-4 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-3xl font-bold text-stone-900">
               ReadAfter Admin
             </h1>
             <p className="text-stone-500 mt-1">
-              {books.length} books &middot; Manage content and check links
+              {books.length} books &middot; {filteredBooks.length} shown
             </p>
           </div>
           <div className="flex gap-3">
@@ -208,11 +259,7 @@ export default function AdminPage() {
               Link Health Report
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <Stat
-                label="Total Checked"
-                value={linkReport.totalChecked}
-                color="stone"
-              />
+              <Stat label="Total Checked" value={linkReport.totalChecked} color="stone" />
               <Stat
                 label="Broken Links"
                 value={linkReport.brokenAmazonLinks}
@@ -235,6 +282,39 @@ export default function AdminPage() {
           </div>
         )}
 
+        {/* Filters */}
+        <div className="bg-white rounded-xl border border-stone-200 p-4 mb-4 flex flex-wrap gap-3 items-center">
+          <input
+            type="text"
+            placeholder="Search title, author, ISBN, ASIN..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="flex-1 min-w-[200px] px-3 py-2 border border-stone-300 rounded-lg text-sm text-stone-900"
+          />
+          <select
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            className="px-3 py-2 border border-stone-300 rounded-lg text-sm text-stone-700 bg-white"
+          >
+            <option value="all">All Categories</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+          <select
+            value={healthFilter}
+            onChange={(e) => setHealthFilter(e.target.value as HealthFilter)}
+            className="px-3 py-2 border border-stone-300 rounded-lg text-sm text-stone-700 bg-white"
+          >
+            <option value="all">All Health</option>
+            <option value="broken-links">Broken Links</option>
+            <option value="broken-covers">Broken Covers</option>
+            <option value="healthy">Healthy Only</option>
+          </select>
+        </div>
+
         {/* Edit Modal */}
         {editingSlug && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -244,46 +324,111 @@ export default function AdminPage() {
               </h2>
               <div className="space-y-3">
                 <Field
+                  label="Title"
+                  value={(editForm.title as string) || ""}
+                  onChange={(v) => setEditForm({ ...editForm, title: v })}
+                />
+                <Field
+                  label="Author"
+                  value={(editForm.author as string) || ""}
+                  onChange={(v) => setEditForm({ ...editForm, author: v })}
+                />
+                <div className="grid grid-cols-2 gap-3">
+                  <Field
+                    label="ISBN"
+                    value={(editForm.isbn as string) || ""}
+                    onChange={(v) => setEditForm({ ...editForm, isbn: v })}
+                  />
+                  <Field
+                    label="ASIN"
+                    value={(editForm.asin as string) || ""}
+                    onChange={(v) => setEditForm({ ...editForm, asin: v })}
+                  />
+                </div>
+                <Field
                   label="Amazon URL"
                   value={(editForm.amazonUrl as string) || ""}
                   onChange={(v) => setEditForm({ ...editForm, amazonUrl: v })}
                 />
-                <Field
-                  label="Amazon Price (INR)"
-                  value={String(editForm.amazonPrice ?? "")}
-                  onChange={(v) =>
-                    setEditForm({
-                      ...editForm,
-                      amazonPrice: v ? Number(v) : null,
-                    })
-                  }
-                />
-                <Field
-                  label="ISBN"
-                  value={(editForm.isbn as string) || ""}
-                  onChange={(v) => setEditForm({ ...editForm, isbn: v })}
-                />
-                <Field
-                  label="Rating"
-                  value={String(editForm.rating ?? "")}
-                  onChange={(v) =>
-                    setEditForm({ ...editForm, rating: Number(v) })
-                  }
-                />
-                {/* Cover preview */}
-                {typeof editForm.isbn === "string" && editForm.isbn && (
-                  <div className="mt-3">
-                    <p className="text-xs font-medium text-stone-500 mb-1">
-                      Cover Preview
-                    </p>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={`https://covers.openlibrary.org/b/isbn/${editForm.isbn}-M.jpg`}
-                      alt="Book cover"
-                      className="w-24 h-auto rounded border"
+                <div className="grid grid-cols-2 gap-3">
+                  <Field
+                    label="Amazon Price (INR)"
+                    value={String(editForm.amazonPrice ?? "")}
+                    onChange={(v) =>
+                      setEditForm({
+                        ...editForm,
+                        amazonPrice: v ? Number(v) : null,
+                      })
+                    }
+                  />
+                  <Field
+                    label="Rating"
+                    value={String(editForm.rating ?? "")}
+                    onChange={(v) =>
+                      setEditForm({ ...editForm, rating: Number(v) })
+                    }
+                  />
+                </div>
+
+                {/* Cover Image */}
+                <div>
+                  <label className="text-xs font-medium text-stone-500">
+                    Custom Cover Image URL
+                  </label>
+                  <div className="flex gap-2 mt-1">
+                    <input
+                      type="text"
+                      value={(editForm.coverImage as string) || ""}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, coverImage: e.target.value })
+                      }
+                      placeholder="Leave empty to use Open Library cover"
+                      className="flex-1 px-3 py-2 border border-stone-300 rounded-lg text-sm text-stone-900"
                     />
+                    {typeof editForm.coverImage === "string" && editForm.coverImage && (
+                      <button
+                        onClick={() =>
+                          setEditForm({ ...editForm, coverImage: "" })
+                        }
+                        className="px-3 py-2 text-xs border border-red-300 text-red-600 rounded-lg hover:bg-red-50"
+                        title="Remove custom image (revert to Open Library)"
+                      >
+                        Remove
+                      </button>
+                    )}
                   </div>
-                )}
+                </div>
+
+                {/* Cover preview */}
+                <div className="mt-3 flex gap-4">
+                  {typeof editForm.coverImage === "string" &&
+                    editForm.coverImage && (
+                      <div>
+                        <p className="text-xs font-medium text-stone-500 mb-1">
+                          Custom Cover
+                        </p>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={editForm.coverImage}
+                          alt="Custom cover"
+                          className="w-24 h-auto rounded border"
+                        />
+                      </div>
+                    )}
+                  {typeof editForm.isbn === "string" && editForm.isbn && (
+                    <div>
+                      <p className="text-xs font-medium text-stone-500 mb-1">
+                        Open Library Cover
+                      </p>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={`https://covers.openlibrary.org/b/isbn/${editForm.isbn}-M.jpg`}
+                        alt="Open Library cover"
+                        className="w-24 h-auto rounded border"
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="flex gap-3 mt-6">
                 <button
@@ -319,6 +464,9 @@ export default function AdminPage() {
                     ISBN
                   </th>
                   <th className="text-left px-4 py-3 font-semibold text-stone-600">
+                    ASIN
+                  </th>
+                  <th className="text-left px-4 py-3 font-semibold text-stone-600">
                     Price
                   </th>
                   <th className="text-center px-4 py-3 font-semibold text-stone-600">
@@ -326,6 +474,9 @@ export default function AdminPage() {
                   </th>
                   <th className="text-center px-4 py-3 font-semibold text-stone-600">
                     Cover
+                  </th>
+                  <th className="text-center px-4 py-3 font-semibold text-stone-600">
+                    Img
                   </th>
                   <th className="text-right px-4 py-3 font-semibold text-stone-600">
                     Actions
@@ -335,12 +486,18 @@ export default function AdminPage() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan={6} className="text-center py-8 text-stone-400">
+                    <td colSpan={8} className="text-center py-8 text-stone-400">
                       Loading...
                     </td>
                   </tr>
+                ) : filteredBooks.length === 0 ? (
+                  <tr>
+                    <td colSpan={8} className="text-center py-8 text-stone-400">
+                      No books match your filters.
+                    </td>
+                  </tr>
                 ) : (
-                  books.map((book) => {
+                  filteredBooks.map((book) => {
                     const linkStatus = getLinkStatus(book.slug);
                     return (
                       <tr
@@ -356,7 +513,10 @@ export default function AdminPage() {
                           </div>
                         </td>
                         <td className="px-4 py-3 font-mono text-xs text-stone-600">
-                          {book.isbn}
+                          {book.isbn || <span className="text-stone-300">—</span>}
+                        </td>
+                        <td className="px-4 py-3 font-mono text-xs text-stone-600">
+                          {book.asin || <span className="text-stone-300">—</span>}
                         </td>
                         <td className="px-4 py-3 text-stone-600">
                           {book.amazonPrice
@@ -364,44 +524,30 @@ export default function AdminPage() {
                             : "—"}
                         </td>
                         <td className="px-4 py-3 text-center">
-                          {linkStatus ? (
-                            linkStatus.amazonUrl.ok ? (
-                              <span className="text-green-600" title="OK">
-                                ✅
-                              </span>
-                            ) : (
-                              <span
-                                className="text-red-600"
-                                title={
-                                  linkStatus.amazonUrl.error ||
-                                  `Status: ${linkStatus.amazonUrl.status}`
-                                }
-                              >
-                                ❌
-                              </span>
-                            )
-                          ) : (
-                            <span className="text-stone-300">—</span>
-                          )}
+                          <StatusIcon status={linkStatus?.amazonUrl.ok} title={
+                            linkStatus
+                              ? linkStatus.amazonUrl.ok
+                                ? "OK"
+                                : linkStatus.amazonUrl.error || `Status: ${linkStatus.amazonUrl.status}`
+                              : undefined
+                          } />
                         </td>
                         <td className="px-4 py-3 text-center">
-                          {linkStatus ? (
-                            linkStatus.coverImage.ok ? (
-                              <span className="text-green-600" title="OK">
-                                ✅
-                              </span>
-                            ) : (
-                              <span
-                                className="text-red-600"
-                                title={
-                                  linkStatus.coverImage.error || "Missing"
-                                }
-                              >
-                                ❌
-                              </span>
-                            )
+                          <StatusIcon status={linkStatus?.coverImage.ok} title={
+                            linkStatus
+                              ? linkStatus.coverImage.ok
+                                ? "OK"
+                                : linkStatus.coverImage.error || "Missing"
+                              : undefined
+                          } />
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          {book.coverImage ? (
+                            <span className="text-blue-600 text-xs" title="Custom image set">
+                              ✎
+                            </span>
                           ) : (
-                            <span className="text-stone-300">—</span>
+                            <span className="text-stone-300 text-xs">OL</span>
                           )}
                         </td>
                         <td className="px-4 py-3 text-right">
@@ -422,6 +568,19 @@ export default function AdminPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// ---- Helper components ----
+
+function StatusIcon({ status, title }: { status?: boolean; title?: string }) {
+  if (status === undefined || status === null) {
+    return <span className="text-stone-300">—</span>;
+  }
+  return status ? (
+    <span className="text-green-600" title={title}>✅</span>
+  ) : (
+    <span className="text-red-600" title={title}>❌</span>
   );
 }
 
@@ -457,10 +616,12 @@ function Field({
   label,
   value,
   onChange,
+  placeholder,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
+  placeholder?: string;
 }) {
   return (
     <div>
@@ -469,6 +630,7 @@ function Field({
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
         className="mt-1 w-full px-3 py-2 border border-stone-300 rounded-lg text-sm text-stone-900"
       />
     </div>

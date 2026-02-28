@@ -5,6 +5,12 @@ import { BookFrontmatter, BookMeta, Category } from "@/types/content";
 
 const BOOKS_DIR = path.join(process.cwd(), "content", "books");
 
+/** Extract ASIN from an Amazon URL like /dp/B08N5WRWNW?tag=... */
+function extractAsin(url: string): string {
+  const match = url.match(/\/dp\/([A-Z0-9]{10})/i);
+  return match ? match[1] : "";
+}
+
 function parseBookFrontmatter(fileContent: string): BookFrontmatter {
   const { data } = matter(fileContent);
 
@@ -17,6 +23,8 @@ function parseBookFrontmatter(fileContent: string): BookFrontmatter {
     summary: data.summary || "",
     amazonUrl: data.amazonUrl || "",
     amazonPrice: data.amazonPrice ?? null,
+    asin: data.asin || extractAsin(data.amazonUrl || ""),
+    coverImage: data.coverImage || "",
     tags: data.tags || [],
     date: data.date,
     featured: data.featured || false,

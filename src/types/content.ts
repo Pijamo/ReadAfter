@@ -39,11 +39,13 @@ export interface BookFrontmatter {
   title: string;
   author: string;
   isbn: string;
+  asin: string;
   category: Category;
   rating: number;
   summary: string;
   amazonUrl: string;
   amazonPrice: number | null;
+  coverImage: string;
   tags: string[];
   date: string;
   featured: boolean;

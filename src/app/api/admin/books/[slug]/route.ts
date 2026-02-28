@@ -57,6 +57,8 @@ export async function PUT(
     "amazonUrl",
     "amazonPrice",
     "isbn",
+    "asin",
+    "coverImage",
     "rating",
     "summary",
     "tags",
