@@ -11,8 +11,9 @@ export default function Header() {
     <header className="border-b border-border bg-card sticky top-0 z-50">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex h-16 items-center justify-between">
-          <Link href="/" className="text-xl font-bold text-primary">
-            {SITE_NAME}
+          <Link href="/" className="text-xl font-bold tracking-tight">
+            <span className="text-foreground">read</span>
+            <span className="text-primary">after</span>
           </Link>
 
           {/* Desktop nav */}

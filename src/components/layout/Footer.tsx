@@ -9,7 +9,10 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand */}
           <div>
-            <h3 className="text-lg font-bold text-foreground">{SITE_NAME}</h3>
+            <h3 className="text-lg font-bold tracking-tight">
+              <span className="text-foreground">read</span>
+              <span className="text-primary">after</span>
+            </h3>
             <p className="mt-2 text-sm text-muted leading-relaxed">
               Curated book recommendations for Indian readers. Compare prices
               across Amazon India and Flipkart to find the best deals.
