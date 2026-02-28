@@ -27,10 +27,9 @@ CONTENT RULES:
 7. Be honest about limitations ("The examples are US-centric, but the principles transfer well to India")
 8. End with a clear rating line: **Rating: X.X/5** — followed by a one-line summary
 
-AMAZON/FLIPKART URLS:
+AMAZON URL:
 - Amazon: "https://www.amazon.in/dp/{ISBN}?tag=readafter-21"
-- Flipkart: "https://www.flipkart.com/PLACEHOLDER" (use a reasonable search-style URL)
-- Set amazonPrice and flipkartPrice to null (will be filled later by pricing agent)
+- Set amazonPrice to null (will be filled later)
 
 RELATED BOOKS:
 - Suggest 2-3 related book slugs that readers might also enjoy
@@ -46,9 +45,7 @@ You must respond with ONLY valid JSON matching this exact structure:
     "rating": number (1.0-5.0, use one decimal place),
     "summary": "string - 1-2 sentence review summary for book cards and meta",
     "amazonUrl": "string - Amazon India affiliate URL with ISBN",
-    "flipkartUrl": "string - Flipkart URL",
     "amazonPrice": null,
-    "flipkartPrice": null,
     "tags": ["string array - 3-6 relevant tags"],
     "date": "string - today's date in YYYY-MM-DD format",
     "featured": false,

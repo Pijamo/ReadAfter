@@ -20,7 +20,6 @@ CHECK EACH BOOK FOR:
 
 4. AFFILIATE LINK FORMAT:
    - Amazon URLs should contain "amazon.in" and include a tag parameter
-   - Flipkart URLs should contain "flipkart.com"
    - No broken or obviously invalid URLs
 
 5. DATA CONSISTENCY:

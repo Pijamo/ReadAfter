@@ -6,7 +6,6 @@ Since you cannot make HTTP requests, validate links by checking:
    - Amazon India links: Must contain "amazon.in/dp/" or "amazon.in/gp/" with a product ID
    - Should include "?tag=readafter-21" or similar affiliate tag
    - No malformed URLs (missing protocol, double slashes, etc.)
-   - Flipkart links: Must contain "flipkart.com" with a product path
 
 2. BOOK-URL MATCH:
    - Does the URL seem to match the book title? (e.g., a URL with "lean-startup" for "The Lean Startup")
@@ -18,7 +17,7 @@ Since you cannot make HTTP requests, validate links by checking:
    - No URL injection or suspicious parameters
 
 4. CONSISTENCY:
-   - Every book should have both Amazon and Flipkart links
+   - Every book should have an Amazon link
    - No duplicate URLs across different books
    - URLs should be unique per book
 
@@ -33,11 +32,6 @@ You must respond with ONLY valid JSON:
         "valid": boolean,
         "isPlaceholder": boolean,
         "hasAffiliateTag": boolean,
-        "issue": "string | null"
-      },
-      "flipkartUrl": {
-        "valid": boolean,
-        "isPlaceholder": boolean,
         "issue": "string | null"
       }
     }

@@ -31,11 +31,10 @@ export default function AboutPage() {
           practical applicability for Indian professionals.
         </p>
 
-        <h2>Price Comparison</h2>
+        <h2>Best Prices on Amazon</h2>
         <p>
-          Books in India are available across multiple platforms, often at
-          different prices. We compare prices across Amazon India and Flipkart so
-          you can find the best deal every time.
+          We help you find the best prices on Amazon India so you can get great
+          deals on the books that matter.
         </p>
 
         <h2>Our Mission</h2>
@@ -48,11 +47,10 @@ export default function AboutPage() {
 
         <h2>How We Earn</h2>
         <p>
-          {SITE_NAME} is supported through affiliate partnerships with Amazon
-          India and Flipkart. When you purchase a book through our links, we earn
-          a small commission at no extra cost to you. This helps us keep the site
-          running and continue creating recommendations. For full details, see
-          our{" "}
+          {SITE_NAME} is supported through an affiliate partnership with Amazon
+          India. When you purchase a book through our links, we earn a small
+          commission at no extra cost to you. This helps us keep the site running
+          and continue creating recommendations. For full details, see our{" "}
           <a href="/disclaimer" className="text-primary">
             Affiliate Disclaimer
           </a>

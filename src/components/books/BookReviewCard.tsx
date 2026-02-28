@@ -5,11 +5,7 @@ import StarRating from "@/components/ui/StarRating";
 
 export default function BookReviewCard({ book }: { book: BookMeta }) {
   const { slug, frontmatter } = book;
-  const cheaperPrice = Math.min(
-    frontmatter.amazonPrice ?? Infinity,
-    frontmatter.flipkartPrice ?? Infinity
-  );
-  const hasPrice = cheaperPrice !== Infinity;
+  const hasPrice = frontmatter.amazonPrice != null;
 
   return (
     <Link
@@ -39,7 +35,7 @@ export default function BookReviewCard({ book }: { book: BookMeta }) {
           <StarRating rating={frontmatter.rating} />
           {hasPrice && (
             <span className="text-xs font-semibold text-green-700 whitespace-nowrap">
-              &#8377;{cheaperPrice.toLocaleString("en-IN")}
+              &#8377;{frontmatter.amazonPrice!.toLocaleString("en-IN")}
             </span>
           )}
         </div>

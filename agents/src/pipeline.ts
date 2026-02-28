@@ -139,10 +139,10 @@ export async function runPipeline(
 
     // Collect warnings
     const linkWarnings = linkResult.results
-      .filter((r) => !r.amazonUrl.valid || !r.flipkartUrl.valid)
+      .filter((r) => !r.amazonUrl.valid)
       .map(
         (r) =>
-          `${r.bookTitle}: ${r.amazonUrl.issue || ""} ${r.flipkartUrl.issue || ""}`.trim()
+          `${r.bookTitle}: ${r.amazonUrl.issue || ""}`.trim()
       );
 
     const totalLinkSuggestions =

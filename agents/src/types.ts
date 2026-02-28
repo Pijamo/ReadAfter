@@ -20,9 +20,7 @@ export interface BookFrontmatter {
   title: string;
   author: string;
   amazonUrl: string;
-  flipkartUrl: string;
   amazonPrice: number | null;
-  flipkartPrice: number | null;
   imageUrl: string;
   rating: number;
   summary: string;
@@ -127,9 +125,7 @@ export interface BookReviewFrontmatter {
   rating: number;
   summary: string;
   amazonUrl: string;
-  flipkartUrl: string;
   amazonPrice: number | null;
-  flipkartPrice: number | null;
   tags: string[];
   date: string;
   featured: boolean;

@@ -19,7 +19,6 @@ export async function validateLinks(
     title: b.title,
     author: b.author,
     amazonUrl: b.amazonUrl,
-    flipkartUrl: b.flipkartUrl,
   }));
 
   const userMessage = `Validate the affiliate links in these book listings:
@@ -40,7 +39,7 @@ Remember: respond with ONLY valid JSON.`;
   const result = linkValidatorOutputSchema.parse(json);
 
   const placeholders = result.results.filter(
-    (r) => r.amazonUrl.isPlaceholder || r.flipkartUrl.isPlaceholder
+    (r) => r.amazonUrl.isPlaceholder
   ).length;
   console.log(
     `[Link Validator] ${result.allValid ? "ALL VALID" : "ISSUES FOUND"} — ${placeholders} placeholder link(s)`

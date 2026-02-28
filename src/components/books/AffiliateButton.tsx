@@ -1,21 +1,16 @@
 interface AffiliateButtonProps {
   href: string;
-  store: "Amazon" | "Flipkart";
+  store: "Amazon";
   price: number | null;
 }
 
 export default function AffiliateButton({ href, store, price }: AffiliateButtonProps) {
-  const colors =
-    store === "Amazon"
-      ? "bg-amber-500 hover:bg-amber-600 text-white"
-      : "bg-blue-600 hover:bg-blue-700 text-white";
-
   return (
     <a
       href={href}
       target="_blank"
       rel="nofollow sponsored noopener"
-      className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${colors}`}
+      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-amber-500 hover:bg-amber-600 text-white"
     >
       <span>{store}</span>
       {price && (

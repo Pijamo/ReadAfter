@@ -17,7 +17,7 @@ BOOK SELECTION CRITERIA:
 1. Books that Indian professionals actively search for reviews of
 2. Mix of internationally popular and India-specific books
 3. Include at least one Indian author per batch when relevant
-4. Books should be available on Amazon India and Flipkart
+4. Books should be available on Amazon India
 5. Prefer books with high search volume in India (e.g., "Atomic Habits review", "Psychology of Money review India")
 6. Avoid very old or out-of-print books unless they're evergreen classics
 

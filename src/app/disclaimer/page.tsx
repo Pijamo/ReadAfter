@@ -20,10 +20,9 @@ export default function DisclaimerPage() {
         <h2>Affiliate Disclosure</h2>
         <p>
           {SITE_NAME} is a participant in the Amazon Services LLC Associates
-          Program (Amazon Associates India) and the Flipkart Affiliate Program.
-          These are affiliate advertising programs designed to provide a means
-          for sites to earn advertising fees by advertising and linking to
-          Amazon.in and Flipkart.com respectively.
+          Program (Amazon Associates India). This is an affiliate advertising
+          program designed to provide a means for sites to earn advertising fees
+          by advertising and linking to Amazon.in.
         </p>
         <p>
           When you click on an affiliate link on our site and make a purchase, we
@@ -42,19 +41,19 @@ export default function DisclaimerPage() {
 
         <h2>Price Information</h2>
         <p>
-          Prices displayed on {SITE_NAME} are sourced from Amazon India and
-          Flipkart at the time of publication. Prices may change at any time, and
-          we cannot guarantee that the prices shown on our site are current. We
-          encourage you to verify the final price on the retailer&apos;s website
-          before making a purchase.
+          Prices displayed on {SITE_NAME} are sourced from Amazon India at the
+          time of publication. Prices may change at any time, and we cannot
+          guarantee that the prices shown on our site are current. We encourage
+          you to verify the final price on the retailer&apos;s website before
+          making a purchase.
         </p>
 
         <h2>Privacy Policy</h2>
         <p>
           {SITE_NAME} does not collect personal information from visitors. We do
           not use cookies for tracking purposes. When you click an affiliate
-          link, the destination site (Amazon India or Flipkart) may set their own
-          cookies in accordance with their privacy policies.
+          link, the destination site (Amazon India) may set their own cookies in
+          accordance with their privacy policies.
         </p>
         <p>
           We may use privacy-friendly analytics to understand general site

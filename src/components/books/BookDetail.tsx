@@ -59,9 +59,7 @@ export default function BookDetail({
           <div className="mt-6">
             <PriceCompare
               amazonUrl={frontmatter.amazonUrl}
-              flipkartUrl={frontmatter.flipkartUrl}
               amazonPrice={frontmatter.amazonPrice}
-              flipkartPrice={frontmatter.flipkartPrice}
             />
           </div>
 

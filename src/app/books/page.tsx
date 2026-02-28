@@ -6,7 +6,7 @@ import BooksPageClient from "@/components/books/BooksPageClient";
 export const metadata: Metadata = {
   title: `Browse Books | ${SITE_NAME}`,
   description:
-    "Browse our curated collection of the best self-help, business, and personal finance books with price comparison across Amazon India and Flipkart.",
+    "Browse our curated collection of the best self-help, business, and personal finance books with the best prices on Amazon India.",
 };
 
 export default function BooksPage() {

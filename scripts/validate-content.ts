@@ -118,9 +118,6 @@ function validateBook(filename: string): string[] {
   } else if (!(data.amazonUrl as string).includes("amazon.in")) {
     errors.push("'amazonUrl' should contain 'amazon.in'");
   }
-  if (!data.flipkartUrl || typeof data.flipkartUrl !== "string") {
-    errors.push("Missing or invalid 'flipkartUrl'");
-  }
   if (!data.date || typeof data.date !== "string") {
     errors.push("Missing or invalid 'date'");
   }

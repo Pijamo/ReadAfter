@@ -29,10 +29,9 @@ CONTENT RULES:
 6. Never fabricate quotes from books — paraphrase instead
 7. Be honest about limitations ("This book is US-centric but the principles apply to India")
 
-AMAZON/FLIPKART URLS:
+AMAZON URL:
 - Use placeholder URLs: "https://www.amazon.in/dp/PLACEHOLDER?tag=readafter-21" for Amazon
-- Use placeholder URLs: "https://www.flipkart.com/PLACEHOLDER" for Flipkart
-- Set amazonPrice and flipkartPrice to null (will be filled later)
+- Set amazonPrice to null (will be filled later)
 
 You must respond with ONLY valid JSON matching this exact structure:
 {
@@ -49,9 +48,7 @@ You must respond with ONLY valid JSON matching this exact structure:
         "title": "string",
         "author": "string",
         "amazonUrl": "string",
-        "flipkartUrl": "string",
         "amazonPrice": null,
-        "flipkartPrice": null,
         "imageUrl": "/images/books/slug.jpg",
         "rating": number (1.0-5.0),
         "summary": "string — 1-2 sentence summary for the book card"

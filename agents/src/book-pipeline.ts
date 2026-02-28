@@ -13,6 +13,7 @@ import {
   getExistingBookSlugs,
 } from "./utils/file-io.js";
 import { verifyBookIsbns } from "./utils/isbn-verify.js";
+import { checkBookLinks, LinkCheckResult } from "./utils/link-checker.js";
 import {
   BookPipelineConfig,
   BookPipelineResult,
@@ -47,9 +48,7 @@ function bookToArticleAdapter(review: BookReviewDraft): ArticleDraft {
           title: review.frontmatter.title,
           author: review.frontmatter.author,
           amazonUrl: review.frontmatter.amazonUrl,
-          flipkartUrl: review.frontmatter.flipkartUrl,
           amazonPrice: review.frontmatter.amazonPrice,
-          flipkartPrice: review.frontmatter.flipkartPrice,
           imageUrl: `https://covers.openlibrary.org/b/isbn/${review.frontmatter.isbn}-L.jpg`,
           rating: review.frontmatter.rating,
           summary: review.frontmatter.summary,
@@ -235,6 +234,39 @@ export async function runBookPipeline(
     );
     saveIntermediate("book-internal-links", brief.slug, linkingSuggestions);
 
+    // 5d: Real link/image checking (HTTP validation)
+    const allBookSlugs = new Set([
+      ...config.existingSlugs,
+      ...verifiedBriefs.map((b) => b.slug),
+    ]);
+    const allArticleSlugs = new Set(
+      existingContent
+        .filter((c) => !allBookSlugs.has(c.slug))
+        .map((c) => c.slug)
+    );
+
+    const linkCheck = await checkBookLinks({
+      slug: brief.slug,
+      title: review.frontmatter.title,
+      isbn: review.frontmatter.isbn,
+      amazonUrl: review.frontmatter.amazonUrl,
+      relatedBooks: review.frontmatter.relatedBooks,
+      allBookSlugs,
+      allArticleSlugs,
+    });
+    saveIntermediate("book-link-check", brief.slug, linkCheck);
+
+    if (!linkCheck.amazonUrl.ok) {
+      console.log(
+        `  ⚠️  Amazon link may be broken: ${linkCheck.amazonUrl.error || `status ${linkCheck.amazonUrl.status}`}`
+      );
+    }
+    if (!linkCheck.coverImage.ok) {
+      console.log(
+        `  ⚠️  Cover image may be missing: ${linkCheck.coverImage.error || "not found"}`
+      );
+    }
+
     // Step 6: Marketing
     const marketing = await generateMarketing(client, articleAdapter);
     saveIntermediate("book-marketing", brief.slug, marketing);
@@ -249,12 +281,27 @@ export async function runBookPipeline(
     }
 
     // Collect warnings
-    const linkWarnings = linkResult.results
-      .filter((r) => !r.amazonUrl.valid || !r.flipkartUrl.valid)
+    const linkWarnings: string[] = linkResult.results
+      .filter((r) => !r.amazonUrl.valid)
       .map(
         (r) =>
-          `${r.bookTitle}: ${r.amazonUrl.issue || ""} ${r.flipkartUrl.issue || ""}`.trim()
+          `${r.bookTitle}: ${r.amazonUrl.issue || ""}`.trim()
       );
+
+    // Add real link check warnings
+    if (!linkCheck.amazonUrl.ok) {
+      linkWarnings.push(
+        `[HTTP] Amazon link broken: ${linkCheck.amazonUrl.error || `status ${linkCheck.amazonUrl.status}`}`
+      );
+    }
+    if (!linkCheck.coverImage.ok) {
+      linkWarnings.push(
+        `[HTTP] Cover image missing for ISBN ${linkCheck.coverImage.isbn}`
+      );
+    }
+    for (const il of linkCheck.internalLinks.filter((l) => !l.exists)) {
+      linkWarnings.push(`[Internal] Related book "${il.slug}" does not exist`);
+    }
 
     const totalLinkSuggestions =
       linkingSuggestions.linksToNewArticle.length +

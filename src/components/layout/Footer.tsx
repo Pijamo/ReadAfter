@@ -14,8 +14,8 @@ export default function Footer() {
               <span className="text-primary">after</span>
             </h3>
             <p className="mt-2 text-sm text-muted leading-relaxed">
-              Curated book recommendations for Indian readers. Compare prices
-              across Amazon India and Flipkart to find the best deals.
+              Curated book recommendations for Indian readers. Best prices
+              on Amazon India.
             </p>
           </div>
 

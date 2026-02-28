@@ -17,8 +17,8 @@ export default function HomePage() {
           Discover Your Next Great Read
         </h1>
         <p className="mt-4 text-lg text-muted max-w-2xl mx-auto">
-          Honest book reviews with price comparison across Amazon India and
-          Flipkart. Find the best deals on the books that matter.
+          Honest book reviews with the best prices on Amazon India. Find
+          great deals on the books that matter.
         </p>
         <div className="mt-6">
           <Link

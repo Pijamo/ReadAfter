@@ -31,9 +31,7 @@ export default function BookCard({ book }: { book: Book }) {
         <div className="mt-4">
           <PriceCompare
             amazonUrl={book.amazonUrl}
-            flipkartUrl={book.flipkartUrl}
             amazonPrice={book.amazonPrice}
-            flipkartPrice={book.flipkartPrice}
           />
         </div>
       </div>

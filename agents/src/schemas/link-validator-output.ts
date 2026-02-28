@@ -14,7 +14,6 @@ export const linkValidatorOutputSchema = z.object({
       bookIndex: z.number(),
       bookTitle: z.string(),
       amazonUrl: urlResultSchema,
-      flipkartUrl: urlResultSchema,
     })
   ),
   summary: z.string(),
